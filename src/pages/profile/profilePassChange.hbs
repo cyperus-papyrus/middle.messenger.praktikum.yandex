@@ -1,0 +1,15 @@
+<div class="profile">
+  {{#> Modal class="modal-profile" title="Сброс пароля" backButton=true footer=true form=true }}
+  {{#*inline "body"}}
+
+  {{> Field id="inputPassOld" name="oldPassword" type="password" placeholder="Пароль"}}
+  {{> Field id="inputPassNew" name="newPassword" type="password" placeholder="Пароль (ещё раз)"}}
+
+  {{/inline}}
+
+  {{#*inline "footer"}}
+  {{> Button id="btnSave" class="button button-red" text="Сохранить"}}
+  {{/inline}}
+  {{/Modal}}
+</div>
+{{> Footer links=footerLinks }}

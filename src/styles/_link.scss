@@ -1,0 +1,16 @@
+@use "variables" as *;
+@use "mixins" as *;
+
+.link {
+    @include flex-center;
+    text-decoration: none;
+    color: $text-primary;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    transition: opacity 0.3s ease-in;
+    &:hover {
+        opacity: 0.5;
+    }
+}

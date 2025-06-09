@@ -1,0 +1,34 @@
+@use "variables" as *;
+@use "mixins" as *;
+.button {
+    text-decoration: none;
+    padding: 22px;
+    border-radius: 14px;
+    width: 100%;
+    @include flex-center;
+    transition: opacity 0.3s ease-in;
+    border: 0;
+    cursor: pointer;
+    &:hover {
+        opacity: 0.5;
+    }
+}
+.button-primary {
+    background: $button-primary-background;
+    color: $button-primary-color;
+}
+
+.button-secondary {
+    background: $button-secondary-background;
+    color: $button-secondary-color;
+}
+
+.button-blue {
+    background: rgba(66, 103, 178, 0.25);
+    color: #4267B2;
+}
+
+.button-red {
+    background: rgba(212, 70, 56, 0.25);
+    color: #D44638;
+}
