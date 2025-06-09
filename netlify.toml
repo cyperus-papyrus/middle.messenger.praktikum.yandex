@@ -8,12 +8,3 @@
 
 [context.production.environment]
   NPM_FLAGS = "--production=false"
-
-[[plugins]]
-  package = "netlify-plugin-cache"
-    [plugins.inputs]
-    paths = [
-      "node_modules",
-      "package-lock.json",
-      "dist"
-    ]
