@@ -14,14 +14,14 @@
     "npm": ">=10"
   },
   "devDependencies": {
+    "vite": "^6.3.5",
+    "vite-plugin-handlebars": "^2.0.0",
+    "autoprefixer": "^10.4.21",
     "postcss": "^8.5.3",
     "postcss-preset-env": "^10.1.6",
     "sass": "^1.89.0"
   },
     "dependencies": {
-    "vite": "^6.3.5",
-    "vite-plugin-handlebars": "^2.0.0",
-    "autoprefixer": "^10.4.21",
     "handlebars": "^4.7.8"
   }
 }
