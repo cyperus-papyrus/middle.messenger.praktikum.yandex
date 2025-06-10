@@ -10,18 +10,17 @@
     "preview": "vite preview"
   },
   "engines": {
-    "node": ">=12",
-    "npm": ">=10"
+    "node": ">=20"
   },
   "devDependencies": {
-    "postcss": "^8.5.3",
-    "postcss-preset-env": "^10.1.6",
-    "sass": "^1.89.0"
-  },
-    "dependencies": {
     "vite": "^6.3.5",
     "vite-plugin-handlebars": "^2.0.0",
+    "sass": "^1.89.0"
+  },
+  "dependencies": {
     "autoprefixer": "^10.4.21",
+    "postcss-preset-env": "^10.1.6",
+    "postcss": "^8.5.3",
     "handlebars": "^4.7.8"
   }
 }
