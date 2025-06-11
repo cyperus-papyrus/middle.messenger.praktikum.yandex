@@ -13,11 +13,11 @@
     "preview": "vite preview"
   },
   "devDependencies": {
+    "vite": "^6.3.5",
     "vite-plugin-handlebars": "^2.0.0",
     "sass": "^1.89.0"
   },
   "dependencies": {
-    "vite": "^6.3.5",
     "autoprefixer": "^10.4.21",
     "postcss-preset-env": "^10.1.6",
     "postcss": "^8.5.3",
