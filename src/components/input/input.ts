@@ -23,8 +23,7 @@ export default class Input extends Block<IInputProps> {
             ...(props.events || {}),
             blur: blurHandler
         };
-
-        const inputClass = `input ${props.className || ''} ${props.error ? 'error' : ''}`;
+        const inputClass = `input ${props.className || ''}${props.error ? ' error' : ''}`;
 
         super({
             ...props,
@@ -33,38 +32,26 @@ export default class Input extends Block<IInputProps> {
         });
     }
 
-    handleBlur(e: FocusEvent) {
+    handleBlur(e: Event): void {
         const input = e.target as HTMLInputElement;
         const { name, value } = input;
         const error = validateField(name, value);
-        console.log(error, value);
-        this.setProps({ error, value });
-
-        this.updateErrorClass();
-    }
-
-    private updateErrorClass() {
-        if (this.element) {
-            if (this.props.error) {
-                this.element.classList.add('error');
-            } else {
-                this.element.classList.remove('error');
-            }
-        }
+        this.setProps({
+            error,
+            value,
+            inputClass: `input ${this.props.className || ''}${error ? ' error' : ''}`
+        });
     }
 
     render(): string {
         return `
             <input
-                {{#if id}}id="{{id}}"{{/if}}
-                type="{{type}}"
-                placeholder="{{placeholder}}"
-                name="{{name}}"
-                class="{{inputClass}}"
-                {{#if value}}value="{{value}}"{{/if}}
-                {{#each attr}}
-                    {{@key}}="{{this}}"
-                {{/each}}
+                id=${this.props.id || ''}
+                type="${this.props.type}"
+                placeholder="${this.props.placeholder}"
+                name="${this.props.name}"
+                class="${this.props.inputClass}"
+                value="${this.props.value || ''}"
             />
         `;
     }

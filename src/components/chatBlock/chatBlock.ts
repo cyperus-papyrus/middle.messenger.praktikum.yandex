@@ -4,7 +4,7 @@ import Avatar from '../avatar/avatar';
 interface IChatBlockProps {
     name: string;
     time: string;
-    message: string;
+    lastMessage: string;
     unread?: number;
     [key: string]: unknown;
 }
@@ -29,7 +29,7 @@ export default class ChatBlock extends Block<IChatBlockProps> {
                 <div class="chat__chatblock-info">
                     <div class="chat__chatblock-header">
                         <span class="chat__chatblock-name">${this.props.name}</span>
-                        <p class="chat__chatblock-message">${this.props.message}</p>
+                        <p class="chat__chatblock-message">${this.props.lastMessage}</p>
                         </div>
                         <div class="chat__chatblock-content">
                         <span class="chat__chatblock-time">${this.props.time}</span>

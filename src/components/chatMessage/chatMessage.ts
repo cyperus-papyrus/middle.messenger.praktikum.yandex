@@ -19,11 +19,7 @@ export default class ChatMessage extends Block<IChatMessageProps> {
         return classes.join(' ');
     }
 
-    getStatusIcon(): string {
-        return this.props.isRead
-            ? '✓✓'
-            : '✓';
-    }
+    getStatusIcon(): string { return this.props.isRead ? '✓✓' : '✓'; }
 
     render() {
         const classes = this.getMessageClasses();

@@ -89,7 +89,9 @@ export default class App {
 
         switch (this.state.currentPage) {
             case 'Home':
-                this.currentPageInstance = new Home();
+                this.currentPageInstance = new Home(
+                    { name: 'Андрей' }
+                );
                 break;
             case 'Auth':
                 this.currentPageInstance = new Auth();

@@ -3,10 +3,16 @@ import Link from '../../components/link/link';
 import Field from '../../components/field/field';
 import ChatBlock from '../../components/chatBlock/chatBlock';
 import ChatMessage from '../../components/chatMessage/chatMessage';
-import ChatSend from '../../components/chatsend/chatsend';
+import ChatSend from '../../components/chatSend/chatSend';
+import Button from '../../components/button/button';
+
+
+interface IHomePageProps {
+    name: string;
+}
 
 export default class HomePage extends Block {
-    constructor() {
+    constructor(props: IHomePageProps) {
         const profileLink = new Link({
             text: 'Профиль',
             icon: 'ArrowRight'
@@ -21,13 +27,22 @@ export default class HomePage extends Block {
         });
 
         const chatBlocks = [
-            new ChatBlock({ name: 'Андрей', time: '10:49', message: 'Изображение', unread: 2 }),
+            new ChatBlock({
+                name: 'Андрей',
+                time: '10:49', lastMessage: 'Изображение', unread: 2
+            }),
             new ChatBlock({
                 name: 'Илья',
-                time: '10:49', message: 'Друзья, у меня для вас особенный выпуск...'
+                time: '10:49', lastMessage: 'Друзья, у меня для вас особенный выпуск...'
             }),
-            new ChatBlock({ name: 'Андрей', time: 'СР', message: 'Изображение', unread: 2 }),
-            new ChatBlock({ name: 'Андрей', time: '1 мая 2025', message: 'Изображение', unread: 2 })
+            new ChatBlock({
+                name: 'Андрей',
+                time: 'СР', lastMessage: 'Изображение', unread: 2
+            }),
+            new ChatBlock({
+                name: 'Андрей',
+                time: '1 мая 2025', lastMessage: 'Изображение', unread: 2
+            })
         ];
 
         const messages = [
@@ -58,13 +73,18 @@ export default class HomePage extends Block {
         ];
 
         const chatSend = new ChatSend();
-
+        const modalButton = new Button({
+            className: 'button-primary',
+            icon: 'Menu'
+        });
         super({
+            ...props,
             profileLink,
             searchField,
             chatBlocks,
             messages,
-            chatSend
+            chatSend,
+            modalButton
         });
 
         this.lists.chatBlocks = chatBlocks;
@@ -81,6 +101,7 @@ export default class HomePage extends Block {
                 </aside>
 
                 <div class="home__chat-area">
+                    <div class="chat-area__header">${this.props.name} {{{ modalButton }}}</div>
                     <div class="chat-area__messages"> {{{ messages }}} </div>
                     <div class="chat-area__send">
                         {{{chatSend}}}

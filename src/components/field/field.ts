@@ -18,8 +18,6 @@ export default class Field extends Block<IFieldProps> {
     constructor(props: IFieldProps) {
         const input = new Input({
             ...props,
-            className: `${props.className || ''} ${props.error ? 'input_error' : ''}`,
-            error: props.error
         });
 
         super({

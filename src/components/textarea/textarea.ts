@@ -1,4 +1,4 @@
-import Block from '../../framework/Block';
+import Block, { IBlockEvents, BlockEvent } from '../../framework/Block';
 import { validateField } from '../../utils/validation';
 
 interface ITextareaProps {
@@ -7,26 +7,22 @@ interface ITextareaProps {
     value?: string;
     className?: string;
     rows?: number;
-    events?: {
-        input?: (e: Event) => void;
-        focus?: (e: Event) => void;
-        blur?: (e: Event) => void;
-    };
+    events?: IBlockEvents;
     [key: string]: unknown;
 }
 
 export default class Textarea extends Block<ITextareaProps> {
     constructor(props: ITextareaProps) {
-        const blurHandler = (e: Event) => {
-            this.handleBlur(e);
+        const blurHandler: BlockEvent = (e: Event) => {
+            this.handleBlur(e as FocusEvent);
         };
 
-        const events = {
+        const events: IBlockEvents = {
             ...(props.events || {}),
             blur: blurHandler
         };
 
-        const textareaClass = `textarea ${props.className || ''} ${props.error ? 'error' : ''}`;
+        const textareaClass = `textarea ${props.className || ''}${props.error ? ' error' : ''}`;
 
         super({
             ...props,
@@ -42,7 +38,7 @@ export default class Textarea extends Block<ITextareaProps> {
         this.setProps({
             error,
             value,
-            textareaClass: `textarea ${this.props.className || ''} ${error ? 'error' : ''}`
+            textareaClass: `textarea ${this.props.className || ''}${error ? ' error' : ''}`
         });
     }
 

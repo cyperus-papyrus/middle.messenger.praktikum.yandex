@@ -10,6 +10,7 @@ export default class ChatSend extends Block {
             name: 'message',
             placeholder: 'Сообщение',
             className: 'chat-send__input',
+            rows: 1
         });
 
         const button = new Button({
