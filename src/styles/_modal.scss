@@ -1,13 +1,16 @@
 @use "variables" as *;
 @use "mixins" as *;
+
 .modal {
     max-width: 380px;
     width: 100%;
     background-color: $bg-dark;
     border-radius: 24px;
+
     @include flex-center;
+
     flex-direction: column;
-    gap: 40px;
+    gap: 0;
     padding: 40px;
 
     &__title {
@@ -16,19 +19,25 @@
         font-weight: 700;
         line-height: 120%;
     }
+
     &__header {
         @include flex-center;
+
         position: relative;
         width: 100%;
+        padding-bottom: 24px;
+
         h2 {
-          margin: 0 auto;
-          text-align: center;
+            margin: 0 auto;
+            text-align: center;
         }
+
         &:has(> .button-secondary) h2 {
             position: absolute;
             left: 50%;
             transform: translateX(-50%);
         }
+
         .button-secondary {
             margin-right: auto;
             z-index: 1;
@@ -37,16 +46,27 @@
             height: 56px;
         }
     }
+
     &__body {
         @include flex-center;
-        flex-direction: column;
-        gap: 24px;
-        width: 100%;
-    }
-    &__footer {
-        @include flex-center;
+
         flex-direction: column;
         gap: 16px;
         width: 100%;
+
+        &:has(.button) {
+            .button {
+                margin-top: 16px;
+            }
+        }
+    }
+
+    &__footer {
+        @include flex-center;
+
+        flex-direction: column;
+        gap: 16px;
+        width: 100%;
+        padding-top: 24px;
     }
 }

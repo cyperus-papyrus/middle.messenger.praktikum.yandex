@@ -8,11 +8,30 @@
     border: 2px solid $bg-gray;
     height: 56px;
     border-radius: 12px;
-    color: #C2C3CB;
+    color: #c2c3cb;
+
     &-search {
         height: 36px;
         border: 1px solid $white-25;
         min-width: 100%;
+    }
+
+    &.error {
+        border: 2px solid $error-color;
+    }
+}
+
+.textarea {
+    padding: 20px 24px;
+    background: $bg-gray;
+    border: 2px solid $bg-gray;
+    height: 56px;
+    border-radius: 12px;
+    color: #c2c3cb;
+    width: 100%;
+
+    &.error {
+        border: 2px solid $error-color;
     }
 }
 
