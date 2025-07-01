@@ -1,4 +1,5 @@
-import Block, { IBlockEvents } from '../../framework/Block';
+import Block from '../../framework/Block';
+import { IBlockEvents } from '../../utils/types';
 import Input from '../input/input';
 
 interface IFieldProps {
@@ -11,6 +12,7 @@ interface IFieldProps {
     events?: IBlockEvents;
     error?: string;
     value?: string;
+    input?: Block;
     [key: string]: unknown;
 }
 
@@ -26,11 +28,27 @@ export default class Field extends Block<IFieldProps> {
         });
     }
 
+    public getValue(): string {
+        return (this.children.input as Input).getValue();
+    }
+
+    public clearInput() {
+        this.children.input.setProps({ value: '' });
+    }
+
+    setInputError() {
+        this.children.input.setProps({
+            error: this.props.error,
+            inputClass: `input error`
+        })
+    }
+
+
     render(): string {
         return `
             <div class="field">
-                {{{ input }}}
-                ${this.props.error ? `<div class="field__error">${this.props.error}</div>` : ''}
+            {{{ input }}}
+            <label class="input__label" for="${this.props.id}">${this.props.placeholder}</label>
             </div>
         `;
     }

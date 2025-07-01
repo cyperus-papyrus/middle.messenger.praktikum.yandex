@@ -1,5 +1,5 @@
 import Block from '../../framework/Block';
-import Button from '../../components/button/button';
+import { BackButton } from '../../components/button/button';
 
 interface IErrorPageProps {
     img: string;
@@ -9,16 +9,11 @@ interface IErrorPageProps {
 
 export default class ErrorPage extends Block {
     constructor(props: IErrorPageProps) {
-        const btnBack = new Button({
+
+        const btnBack = new BackButton({
             id: 'btnBack',
             className: 'button-primary',
-            text: 'Назад к чатам',
-            events: {
-                click: () => {
-                    console.log('Back!');
-                    window.history.back();
-                }
-            }
+            text: 'Назад к чатам'
         });
 
         super({
@@ -30,11 +25,30 @@ export default class ErrorPage extends Block {
         });
     }
     render(): string {
-        return `
-        <div>
+        return `<div>
             <img class="error__img" src="/{{img}}" alt="{{img_alt}}">
             <h1 class="error__title">{{title}}</h1>
             {{{btnBack}}}
         </div>`;
+    }
+}
+
+export class Page404 extends ErrorPage {
+    constructor() {
+        super({
+            img: "404.svg",
+            img_alt: "404 Not Found",
+            title: "Не туда попали"
+        });
+    }
+}
+
+export class Page500 extends ErrorPage {
+    constructor() {
+        super({
+            img: "500.svg",
+            img_alt: "500 Server Error",
+            title: "Уже фиксим",
+        });
     }
 }

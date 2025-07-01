@@ -1,5 +1,7 @@
-import Block, { IBlockEvents } from '../../framework/Block';
+import Block from '../../framework/Block';
+import { IBlockEvents } from '../../utils/types';
 import Icon from '../icon/icon';
+import Router from '../../framework/Router';
 
 interface IButtonProps {
     id?: string;
@@ -39,5 +41,19 @@ export default class Button extends Block {
         return `<button>
             {{text}} {{{ Icon }}} </button>
         `;
+    }
+}
+
+
+export class BackButton extends Button {
+    constructor(props: IButtonProps) {
+        const router = Router.getInstance();
+
+        super({
+            ...props,
+            events: {
+                click: () => router.back()
+            }
+        });
     }
 }

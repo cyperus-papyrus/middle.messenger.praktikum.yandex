@@ -16,8 +16,18 @@
         min-width: 100%;
     }
 
+    &__label {
+        color: $text-secondary;
+        font-size: 14px;
+        padding: 0 4px;
+    }
+
     &.error {
         border: 2px solid $error-color;
+
+        & + .input__label {
+            color: $error-color;
+        }
     }
 }
 
@@ -50,4 +60,8 @@
 
 .field {
     position: relative;
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 4px;
+    width: 100%;
 }

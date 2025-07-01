@@ -1,10 +1,14 @@
 import Block from '../../framework/Block';
-import Modal from '../../components/modal/modal';
+import SinglePage from '../../components/singlepage/singlepage';
 import Field from '../../components/field/field';
-import Button from '../../components/button/button';
+import Button, { BackButton } from '../../components/button/button';
+import Notification from '../../components/notification/notification';
 import { validateForm } from '../../utils/validation';
+import { updatePassword } from '../../actions/user';
+
 
 export default class ProfilePassChangePage extends Block {
+    private notification?: Notification;
     constructor() {
         const bodyComponents = [
             new Field({
@@ -27,19 +31,13 @@ export default class ProfilePassChangePage extends Block {
             })
         ];
 
-        const backButton = new Button({
+        const backButton = new BackButton({
             className: 'button-secondary',
-            icon: 'ArrowBack',
-            events: {
-                click: (e) => {
-                    e.preventDefault();
-                    console.log('Save password button clicked');
-                }
-            }
+            icon: 'ArrowBack'
         });
 
-        const modal = new Modal({
-            className: 'modal-profile',
+        const singlePage = new SinglePage({
+            className: 'singlePage-profile',
             title: 'Сброс пароля',
             backButton: backButton,
             bodyContent: bodyComponents,
@@ -49,32 +47,53 @@ export default class ProfilePassChangePage extends Block {
             }
         });
 
-        super({ modal });
+        const notification = new Notification({
+            message: "",
+            visible: false,
+        });
+
+        super({ notification, singlePage });
+        this.notification = notification;
     }
 
-    handleSubmit(event: Event) {
+    async handleSubmit(event: Event) {
         event.preventDefault();
         const form = event.target as HTMLFormElement;
         const formData = new FormData(form);
-
-        const data: Record<string, string> = {};
-        formData.forEach((value, key) => {
-            data[key] = value.toString();
-        });
+        const data = {
+            oldPassword: formData.get('oldPassword') as string,
+            newPassword: formData.get('newPassword') as string
+        };
 
         const errors = validateForm(data);
 
         if (Object.keys(errors).length === 0) {
-            console.log('Form data:', data);
+            try {
+                await updatePassword(data);
+                if (this.notification) {
+                    this.notification.showUp("Данные успешно обновлены!", 'success');
+                }
+            } catch (error) {
+                console.error('Update failed:', error);
+                if (this.notification) {
+                    this.notification.showUp("Ошибка при обновлении данных", 'error');
+                }
+            }
         } else {
             console.error('Validation errors:', errors);
+            if (this.notification) {
+                this.notification.showUp("Ошибка при обновлении данных!", 'error');
+            }
         }
     }
 
     render(): string {
         return `
             <div class="profile">
-                {{{modal}}}
+                {{{singlePage}}}
+                <div class="notification-container">
+                    {{{ notification }}}
+                </div>
             </div>
         `;
     }

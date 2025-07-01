@@ -1,10 +1,13 @@
 @use "./button";
 @use "./link";
 @use "./input";
-@use "./modal";
+@use "./single-page";
 @use "./profile";
 @use "./avatar";
 @use "./chat";
+@use "./notification";
+@use "./dropdown";
+@use "./modal";
 @import "https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,100..1000&display=swap";
 
 * {
@@ -27,6 +30,17 @@ h2 {
     font-size: 20px;
 }
 
+.list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    p {
+        margin: 0;
+        padding-left: 8px;
+    }
+}
+
 .auth,
 .registration,
 .error__page,
@@ -43,7 +57,7 @@ h2 {
 
 .home {
     width: 100vw;
-    height: calc(100vh - 40px);
+    min-height: 100vh;
     display: flex;
     align-items: flex-start;
     justify-content: flex-start;
@@ -53,6 +67,7 @@ h2 {
         max-width: 310px;
         width: 25%;
         height: 100%;
+        min-height: 100vh;
         display: flex;
         flex-direction: column;
         padding: 8px;
@@ -65,6 +80,7 @@ h2 {
 
     &__chat-area {
         height: 100%;
+        min-height: 100vh;
         width: 100%;
         background-color: $bg-dark;
 

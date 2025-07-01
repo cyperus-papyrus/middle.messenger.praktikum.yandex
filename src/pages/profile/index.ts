@@ -1,9 +1,14 @@
 import Block from '../../framework/Block';
-import Modal from '../../components/modal/modal';
+import SinglePage from '../../components/singlepage/singlepage';
 import Avatar from '../../components/avatar/avatar';
-import Button from '../../components/button/button';
+import Button, { BackButton } from '../../components/button/button';
 import Link from '../../components/link/link';
 import { createStaticBlock } from '../../components/helpers/createStaticBlock';
+import Store from '../../framework/Store';
+import { User } from '../../utils/types';
+
+import { logout } from '../../actions/auth';
+import Router from '../../framework/Router';
 
 interface UserDataItem {
     label: string;
@@ -12,18 +17,21 @@ interface UserDataItem {
 
 export default class ProfilePage extends Block {
     constructor() {
+        const state = Store.getState();
+        const user = state.user as User;
         const userData: UserDataItem[] = [
-            { label: 'Имя', value: 'Иван' },
-            { label: 'Фамилия', value: 'Иванов' },
-            { label: 'Логин', value: 'ivanivanov' },
-            { label: 'Почта', value: 'pochta@yandex.ru' },
-            { label: 'Имя в чате', value: 'Иван' },
-            { label: 'Телефон', value: '8 (800) 555-35-35' }
+            { label: 'Имя', value: user.first_name },
+            { label: 'Фамилия', value: user.second_name },
+            { label: 'Логин', value: user.login },
+            { label: 'Почта', value: user.email },
+            { label: 'Имя в чате', value: user.display_name || user.login },
+            { label: 'Телефон', value: user.phone }
         ];
 
         const changePasswordLink = new Link({
             text: 'Хотите сменить пароль?',
-            url: '#'
+            url: 'settings-change-pass',
+            className: 'link',
         });
 
         const userDataHTML = `
@@ -46,7 +54,7 @@ export default class ProfilePage extends Block {
 
         const bodyComponents = [
             new Avatar({
-                name: 'Avatar.svg',
+                src: user.avatar,
                 alt: 'Аватар пользователя',
                 className: 'profile__avatar'
             }),
@@ -55,45 +63,48 @@ export default class ProfilePage extends Block {
         ];
 
         const footerComponents = [
-            new Button({
+            new Link({
                 id: 'btnChangeProfile',
-                className: 'button-secondary',
+                className: 'button button-secondary',
                 text: 'Изменить данные',
+                url: '/settings-change'
+            }),
+            new Button({
+                id: 'btnLogOut',
+                className: 'button button-red',
+                text: 'Выйти из системы',
                 events: {
-                    click: (e) => {
-                        e.preventDefault();
-                        console.log('Change data, please');
-                    }
+                    click: () => this.logout()
                 }
             })
         ];
 
-        const backButton = new Button({
+        const backButton = new BackButton({
             className: 'button-secondary',
-            icon: 'ArrowBack',
-            events: {
-                click: (e) => {
-                    e.preventDefault();
-                    console.log('Save password button clicked');
-                }
-            }
+            icon: 'ArrowBack'
         });
 
-        const modal = new Modal({
-            className: 'modal-profile',
+        const singlePage = new SinglePage({
+            className: 'singlePage-profile',
             title: 'Профиль',
             backButton: backButton,
             bodyContent: bodyComponents,
             footerContent: footerComponents
         });
 
-        super({ modal });
+        super({ singlePage });
+    }
+
+    logout() {
+        logout().then(() => {
+            Router.getInstance().go('/auth');
+        });
     }
 
     render(): string {
         return `
             <div class="profile">
-                {{{modal}}}
+                {{{singlePage}}}
             </div>
         `;
     }

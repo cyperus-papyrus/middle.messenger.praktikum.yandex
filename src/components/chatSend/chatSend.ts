@@ -2,10 +2,14 @@ import Block from '../../framework/Block';
 import Textarea from '../textarea/textarea';
 import Button from '../button/button';
 import { validateForm } from '../../utils/validation';
+import { IBlockProps } from '../../utils/types';
 
-export default class ChatSend extends Block {
+interface ChatSendProps extends IBlockProps {
+    onSubmit: (message: string) => void;
+}
 
-    constructor() {
+export default class ChatSend extends Block<ChatSendProps> {
+    constructor(props: ChatSendProps) {
         const textarea = new Textarea({
             name: 'message',
             placeholder: 'Сообщение',
@@ -20,6 +24,7 @@ export default class ChatSend extends Block {
         });
 
         super({
+            ...props,
             textarea,
             button,
             events: {
@@ -32,16 +37,15 @@ export default class ChatSend extends Block {
         e.preventDefault();
         const form = e.target as HTMLFormElement;
         const formData = new FormData(form);
+        const textarea = form.querySelector('textarea') as HTMLTextAreaElement;
 
-        const data: Record<string, string> = {};
-        formData.forEach((value, key) => {
-            data[key] = value.toString();
-        });
+        const message = formData.get('message')?.toString() || '';
 
-        const errors = validateForm(data);
+        const errors = validateForm({ message });
 
         if (Object.keys(errors).length === 0) {
-            console.log('Form data:', data);
+            this.props.onSubmit(message);
+            textarea.value = '';
         } else {
             console.error('Validation errors:', errors);
         }

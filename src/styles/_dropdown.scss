@@ -1,0 +1,47 @@
+@use "variables" as *;
+@use "mixins" as *;
+
+.dropdown-menu {
+    position: relative;
+    z-index: 10;
+
+    &__toggle {
+        cursor: pointer;
+    }
+
+    &__content {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        background: $bg-gray;
+        border-radius: 8px;
+        min-width: 200px;
+        overflow: hidden;
+        z-index: 100;
+        margin-top: 5px;
+
+        &--left {
+            left: 0;
+            right: auto;
+        }
+    }
+
+    .button-menu-item {
+        background: $bg-gray;
+        color: $white;
+        width: 100%;
+        text-align: left;
+        justify-content: flex-start;
+
+        img {
+            width: 16px;
+            height: 16px;
+            object-fit: contain;
+            margin-left: 8px;
+        }
+
+        &--danger {
+            color: $error-color;
+        }
+    }
+}
