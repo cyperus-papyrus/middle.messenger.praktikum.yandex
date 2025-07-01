@@ -3,6 +3,7 @@
 
 .link {
     @include flex-center;
+
     text-decoration: none;
     color: $text-primary;
     background-color: transparent;
@@ -10,6 +11,7 @@
     cursor: pointer;
     font-weight: 600;
     transition: opacity 0.3s ease-in;
+
     &:hover {
         opacity: 0.5;
     }

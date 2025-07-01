@@ -1,0 +1,43 @@
+import Block, { IBlockEvents } from '../../framework/Block';
+import Icon from '../icon/icon';
+
+interface ILinkProps {
+    id?: string;
+    url?: string;
+    className?: string;
+    disabled?: boolean;
+    text?: string;
+    icon?: string;
+    attr?: Record<string, string>;
+    events?: IBlockEvents;
+}
+
+export default class Link extends Block {
+    constructor(props: ILinkProps) {
+        const children: Record<string, Block> = {};
+        if (props.icon) {
+            children.Icon = new Icon({ name: props.icon });
+        }
+
+        const attr: Record<string, string> = {
+            ...props.attr,
+            class: `link ${props.className || ''}`.trim(),
+        };
+
+        if (props.id) attr.id = props.id;
+        if (props.disabled) attr.disabled = 'disabled';
+
+        super({
+            text: props.text,
+            attr,
+            events: props.events,
+            ...children
+        });
+    }
+    render(): string {
+        return `<a href="{{url}}" class="{{class}}">
+            {{text}}
+            {{{ Icon }}}
+            </a>`;
+    }
+}

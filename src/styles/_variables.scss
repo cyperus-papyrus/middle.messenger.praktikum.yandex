@@ -3,8 +3,9 @@ $error-color: #d44638;
 
 // Градации белого
 @function alpha($color, $opacity) {
-  @return rgba($color, $opacity);
+    @return rgba($color, $opacity);
 }
+
 $white: alpha(white, 1);
 $white-50: alpha(white, 0.5);
 $white-25: alpha(white, 0.25);
@@ -27,6 +28,9 @@ $svg-fill: $text-primary;
 // Кнопки
 $button-primary-background: #1b1e20;
 $button-primary-color: $text-primary;
-
 $button-secondary-background: $bg-gray;
 $button-secondary-color: #b1b1b1;
+
+// Chat BG
+$chat-message-bg-mine: rgb(172 173 185 / 50%);
+$chat-message-bg: #232627;

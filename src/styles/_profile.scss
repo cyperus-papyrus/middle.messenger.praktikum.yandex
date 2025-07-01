@@ -7,23 +7,29 @@
         display: flex;
         flex-direction: column;
         gap: 8px;
+
         &-line {
             width: 100%;
             display: flex;
             justify-content: space-between;
         }
+
         &-link {
             padding-top: 16px;
             justify-content: flex-end;
         }
     }
+
     &__avatar {
         position: relative;
+
         &-overlay {
             position: absolute;
             inset: 0;
+
             @include flex-center;
-            background: linear-gradient(0deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), rgba(219, 219, 219, 0.25);
+
+            background: linear-gradient(0deg, rgb(0 0 0 / 20%), rgb(0 0 0 / 20%)), rgb(219 219 219 / 25%);
             opacity: 0;
             visibility: hidden;
             transition:
@@ -40,6 +46,7 @@
         &:hover &-overlay {
             opacity: 1;
             visibility: visible;
+
             .icon {
                 transform: scale(1.1);
             }
