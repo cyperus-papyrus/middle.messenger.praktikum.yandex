@@ -12,7 +12,8 @@
     "prebuild": "tsc --noEmit",
     "build": "vite build",
     "preview": "vite preview",
-    "lint:css": "stylelint \"src/**/*.scss\""
+    "lint:css": "stylelint \"src/**/*.scss\"",
+    "eslint": "eslint \"src/**/*.[jt]s\""
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^8.34.1",
@@ -36,4 +37,3 @@
     "postcss-preset-env": "^10.1.6"
   }
 }
-

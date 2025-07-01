@@ -101,8 +101,10 @@ export default class HomePage extends Block {
                 </aside>
 
                 <div class="home__chat-area">
-                    <div class="chat-area__header">${this.props.name} {{{ modalButton }}}</div>
-                    <div class="chat-area__messages"> {{{ messages }}} </div>
+                    <header class="chat-area__header">
+                    ${this.props.name} {{{ modalButton }}}
+                    </header>
+                    <section class="chat-area__messages"> {{{ messages }}} </section>
                     <div class="chat-area__send">
                         {{{chatSend}}}
                     </div>
