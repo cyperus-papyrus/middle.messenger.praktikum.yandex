@@ -1,145 +1,66 @@
-import Block from './framework/Block';
-import Footer from './components/nav_footer/navigationFooter';
-import ErrorPage from './pages/error/index';
 import Home from './pages/home/index';
+import Router from './framework/Router';
 import Auth from './pages/auth';
 import Registration from './pages/registration';
 import Profile from './pages/profile';
 import ProfileChange from './pages/profileChange';
 import ProfilePassChange from './pages/profilePassChange';
+import { Page404, Page500 } from './pages/error/index';
+import AuthAPI from './api/auth-api';
 
-interface AppState {
-    currentPage: string;
-}
+import Store from './framework/Store';
 
-const FOOTER_LINKS = [
-    { text: 'Главная', target: 'Home' },
-    { text: 'Авторизация', target: 'Auth' },
-    { text: 'Регистрация', target: 'Registration' },
-    { text: 'Профиль', target: 'Profile' },
-    { text: 'Профиль: смена данных', target: 'ProfileChange' },
-    { text: 'Профиль: смена пароля', target: 'ProfilePassChange' },
-    { text: '404', target: 'Page404' },
-    { text: '500', target: 'Page500' }
-];
+export const router = new Router('#app')
 
 export default class App {
-    state: AppState;
-    appElement: HTMLElement;
-    private currentPageInstance: Block | null = null;
-    private footer: Footer;
+    router: Router;
 
     constructor() {
-        this.state = {
-            currentPage: 'Home'
-        };
-        this.navigateTo = this.navigateTo.bind(this);
-        this.handleFooterClick = this.handleFooterClick.bind(this);
-        const appElement = document.getElementById('app');
-        if (!appElement) {
-            throw new Error('App element not found');
-        }
-        this.appElement = appElement;
+        this.router = router;
+        this._registerRoutes();
+        this.init();
+    }
 
-        this.footer = new Footer({
-            links: FOOTER_LINKS,
-            events: {
-                click: (e) => this.handleFooterClick(e)
+
+    async init() {
+        try {
+            const user = await AuthAPI.getUser();
+            Store.set('user', user);
+        } catch {
+            // pass
+        } finally {
+            this.redirectIfNeeded();
+        }
+    }
+
+    private redirectIfNeeded() {
+        const user = Store.getState().user;
+        const currentPath = window.location.pathname;
+
+        if (user) {
+            if (currentPath === '/' || currentPath === '/auth' || currentPath === '/sign-up') {
+                this.router.go('/messenger');
             }
-        });
-        const footerElement = this.footer.getContent();
-
-        this.appElement.appendChild(footerElement);
-
-        this.render();
-    }
-    private handleFooterClick = (e: Event) => {
-        const target = e.target as HTMLElement;
-        if (target && target.dataset.target) {
-            e.preventDefault();
-            this.navigateTo(target.dataset.target);
-        }
-    }
-
-    public navigateTo(page: string) {
-        this.state.currentPage = page;
-        this.updateActiveLink(page);
-        this.render();
-    }
-
-    private updateActiveLink(page: string) {
-        const links = this.appElement.querySelectorAll('.footer-link');
-        links.forEach(link => {
-            if (link instanceof HTMLElement && link.dataset.target === page) {
-                link.classList.add('active');
-            } else {
-                link.classList.remove('active');
+        } else {
+            if (currentPath !== '/auth' && currentPath !== '/sign-up') {
+                this.router.go('/auth');
             }
-        });
+        }
     }
 
-    public render() {
-        if (this.currentPageInstance) {
-            const oldContent = this.currentPageInstance.getContent();
-            if (oldContent && oldContent.parentNode === this.appElement) {
-                oldContent.remove();
-            }
-            this.currentPageInstance = null;
-        }
+    private _registerRoutes(): void {
+        this.router.use('/', Home);
+        this.router.use('/messenger', Home)
+        this.router.use('/sign-up', Registration);
+        this.router.use('/settings', Profile);
 
-        switch (this.state.currentPage) {
-            case 'Home':
-                this.currentPageInstance = new Home(
-                    { name: 'Андрей' }
-                );
-                break;
-            case 'Auth':
-                this.currentPageInstance = new Auth();
-                break;
-            case 'Registration':
-                this.currentPageInstance = new Registration();
-                break;
-            case 'Profile':
-                this.currentPageInstance = new Profile();
-                break;
-            case 'ProfileChange':
-                this.currentPageInstance = new ProfileChange();
-                break;
-            case 'ProfilePassChange':
-                this.currentPageInstance = new ProfilePassChange();
-                break;
-            case 'Page404':
-                this.currentPageInstance = new ErrorPage({
-                    img: "404.svg",
-                    img_alt: "404",
-                    title: "Не туда попали"
-                });
-                break;
-            case 'Page500':
-                this.currentPageInstance = new ErrorPage({
-                    img: "500.svg",
-                    img_alt: "500",
-                    title: "Уже фиксим"
-                });
-                break;
-            default:
-                this.currentPageInstance = new ErrorPage({
-                    img: "404.svg",
-                    img_alt: "404",
-                    title: "Не туда попали"
-                });
-        }
+        this.router.use('/auth', Auth);
+        this.router.use('/settings-change', ProfileChange);
+        this.router.use('/settings-change-pass', ProfilePassChange);
+        this.router.use('/500', Page500);
+        this.router.use('/404', Page404);
 
-        const pageContent = this.currentPageInstance.getContent();
-        const footer = this.appElement.querySelector('footer');
-        if (pageContent && footer) {
-            this.appElement.insertBefore(pageContent, footer);
-            this.currentPageInstance.show();
-        } else if (pageContent) {
-            this.appElement.appendChild(pageContent);
-            this.currentPageInstance.show();
-        }
-
-        this.updateActiveLink(this.state.currentPage);
+        this.router.use('*', Page404);
+        this.router.start();
     }
 }

@@ -46,6 +46,7 @@
         &:hover &-overlay {
             opacity: 1;
             visibility: visible;
+            cursor: pointer;
 
             .icon {
                 transform: scale(1.1);
