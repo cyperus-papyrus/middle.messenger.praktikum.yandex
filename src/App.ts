@@ -21,7 +21,6 @@ export default class App {
         this.init();
     }
 
-
     async init() {
         try {
             const user = await AuthAPI.getUser();
@@ -30,6 +29,7 @@ export default class App {
             // pass
         } finally {
             this.redirectIfNeeded();
+            this.router.start();
         }
     }
 
@@ -61,6 +61,5 @@ export default class App {
         this.router.use('/404', Page404);
 
         this.router.use('*', Page404);
-        this.router.start();
     }
 }
