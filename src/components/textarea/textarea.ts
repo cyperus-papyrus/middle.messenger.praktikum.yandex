@@ -1,4 +1,5 @@
-import Block, { IBlockEvents, BlockEvent } from '../../framework/Block';
+import Block from '../../framework/Block';
+import { IBlockEvents, BlockEvent } from '../../utils/types';
 import { validateField } from '../../utils/validation';
 
 interface ITextareaProps {

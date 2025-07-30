@@ -1,11 +1,18 @@
 import Block from '../../framework/Block';
-import Modal from '../../components/modal/modal';
+import SinglePage from '../../components/singlepage/singlepage';
 import Field from '../../components/field/field';
 import Button from '../../components/button/button';
 import Link from '../../components/link/link';
 import { validateForm } from '../../utils/validation';
+import { login } from '../../actions/auth';
+import Store, { StoreEvents } from '../../framework/Store';
+import Router from '../../framework/Router';
+
+import Notification from '../../components/notification/notification';
 
 export default class AuthPage extends Block {
+
+    private notification: Notification | null = null;
     constructor() {
         const bodyComponents = [
             new Field({
@@ -33,12 +40,13 @@ export default class AuthPage extends Block {
         const footerComponents = [
             new Link({
                 text: 'Нет аккаунта?',
-                url: '#'
+                url: 'sign-up',
+                className: 'link'
             })
         ];
 
-        const modal = new Modal({
-            className: 'modal-auth',
+        const singlePage = new SinglePage({
+            className: 'singlePage-auth',
             title: 'Вход',
             form: true,
             bodyContent: bodyComponents,
@@ -48,32 +56,60 @@ export default class AuthPage extends Block {
             }
         });
 
-        super({ modal });
+        const notification = new Notification({
+            message: "",
+            visible: false,
+        });
+        super({
+            singlePage,
+            notification
+        });
+
+        this.notification = notification;
+        Store.on(StoreEvents.Updated, () => {
+            if (Store.getState().user) {
+                Router.getInstance().go('/messenger');
+            }
+        });
+
     }
 
-    handleSubmit(event: Event) {
-        event.preventDefault();
-        const form = event.target as HTMLFormElement;
+    async handleSubmit(e: Event) {
+        e.preventDefault();
+        const form = e.target as HTMLFormElement;
         const formData = new FormData(form);
 
-        const data: Record<string, string> = {};
-        formData.forEach((value, key) => {
-            data[key] = value.toString();
-        });
+        const data = {
+            login: formData.get('login') as string,
+            password: formData.get('password') as string
+        };
 
         const errors = validateForm(data);
 
         if (Object.keys(errors).length === 0) {
-            console.log('Form data:', data);
+            try {
+                await login(data);
+            } catch (error) {
+                console.error('Failed:', error);
+                if (this.notification) {
+                    this.notification.showUp(`Ошибка при авторизации: ${error}`, 'error');
+                }
+            }
         } else {
             console.error('Validation errors:', errors);
+            if (this.notification) {
+                this.notification.showUp("Ошибка!", 'error');
+            }
         }
     }
 
     render(): string {
         return `
             <div class="auth">
-                {{{modal}}}
+                {{{singlePage}}}
+                <div class="notification-container">
+                    {{{ notification }}}
+                </div>
             </div>
         `;
     }

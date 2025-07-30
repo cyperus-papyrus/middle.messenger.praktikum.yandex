@@ -1,4 +1,5 @@
-import Block, { IBlockEvents } from '../../framework/Block';
+import Block from '../../framework/Block';
+import { IBlockEvents } from '../../utils/types';
 import Icon from '../icon/icon';
 
 interface ILinkProps {
@@ -21,13 +22,14 @@ export default class Link extends Block {
 
         const attr: Record<string, string> = {
             ...props.attr,
-            class: `link ${props.className || ''}`.trim(),
+            class: `${props.className || ''}`.trim(),
         };
 
         if (props.id) attr.id = props.id;
         if (props.disabled) attr.disabled = 'disabled';
 
         super({
+            url: props.url,
             text: props.text,
             attr,
             events: props.events,

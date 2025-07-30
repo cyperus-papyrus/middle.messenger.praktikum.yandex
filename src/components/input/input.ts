@@ -1,4 +1,5 @@
-import Block, { IBlockEvents, BlockEvent } from '../../framework/Block';
+import Block from '../../framework/Block';
+import { IBlockEvents, BlockEvent } from '../../utils/types';
 import { validateField } from '../../utils/validation';
 
 interface IInputProps {
@@ -10,6 +11,7 @@ interface IInputProps {
     attr?: Record<string, string>;
     events?: IBlockEvents;
     value?: string;
+    error?: unknown;
     [key: string]: unknown;
 }
 
@@ -43,6 +45,12 @@ export default class Input extends Block<IInputProps> {
         });
     }
 
+
+    public getValue(): string {
+        const input = this.element as HTMLInputElement;
+        return input.value;
+    }
+
     render(): string {
         return `
             <input
@@ -53,6 +61,6 @@ export default class Input extends Block<IInputProps> {
                 class="${this.props.inputClass}"
                 value="${this.props.value || ''}"
             />
-        `;
+            `;
     }
 }

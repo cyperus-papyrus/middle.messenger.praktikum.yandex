@@ -1,11 +1,17 @@
 import Block from '../../framework/Block';
-import Modal from '../../components/modal/modal';
+import SinglePage from '../../components/singlepage/singlepage';
 import Field from '../../components/field/field';
 import Button from '../../components/button/button';
-import Link from '../../components/link/link';
 import { validateForm } from '../../utils/validation';
+import { register } from '../../actions/auth';
+import Store, { StoreEvents } from '../../framework/Store';
+import Router from '../../framework/Router';
+
+import Notification from '../../components/notification/notification';
 
 export default class RegistrationPage extends Block {
+
+    private notification: Notification | null = null;
     constructor() {
         const bodyComponents = [
             new Field({
@@ -57,50 +63,66 @@ export default class RegistrationPage extends Block {
             }),
         ];
 
-        const footerComponents = [
-            new Link({
-                text: 'Нет аккаунта?',
-                url: '#'
-            })
-        ];
-
-        const modal = new Modal({
-            className: 'modal-registration',
+        const singlePage = new SinglePage({
+            className: 'singlePage-registration',
             title: 'Регистрация',
             form: true,
             bodyContent: bodyComponents,
-            footerContent: footerComponents,
             events: {
                 submit: (e: Event) => this.handleSubmit(e)
             }
         });
 
-        super({ modal });
+        const notification = new Notification({
+            message: "",
+            visible: false,
+        });
+        super({
+            singlePage,
+            notification
+        });
+
+        this.notification = notification;
+        Store.on(StoreEvents.Updated, () => {
+            if (Store.getState().user) {
+                Router.getInstance().go('/messenger');
+            }
+        });
     }
 
-    handleSubmit(event: Event) {
-        event.preventDefault();
-        const form = event.target as HTMLFormElement;
+    async handleSubmit(e: Event) {
+        e.preventDefault();
+        const form = e.target as HTMLFormElement;
         const formData = new FormData(form);
 
-        const data: Record<string, string> = {};
-        formData.forEach((value, key) => {
-            data[key] = value.toString();
-        });
+        const data = {
+            first_name: formData.get('first_name') as string,
+            second_name: formData.get('second_name') as string,
+            login: formData.get('login') as string,
+            email: formData.get('email') as string,
+            password: formData.get('password') as string,
+            phone: formData.get('phone') as string
+        };
 
         const errors = validateForm(data);
 
         if (Object.keys(errors).length === 0) {
-            console.log('Form data:', data);
+            await register(data);
         } else {
             console.error('Validation errors:', errors);
+            if (this.notification) {
+                this.notification.showUp("Ошибка!", 'error');
+            }
         }
     }
 
     render(): string {
         return `
             <div class="registration">
-                {{{modal}}}
+                {{{singlePage}}}
+                <div class="notification-container">
+                    {{{ notification }}}
+                </div>
             </div>
         `;
     }

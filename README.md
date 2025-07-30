@@ -19,9 +19,21 @@
 
 [Figma](https://www.figma.com/design/nMbTLoEShwtUgU3KotLhJv/Dark-Theme-Chat-Ui?)
 
-[Netlify](https://chat-olgavrish.netlify.app/)
+[Netlify: Авторизация](https://chat-olgavrish.netlify.app/)
 
-## 🔥 Спринт_2: новые фичи
+[Netlify: Регистрация](https://chat-olgavrish.netlify.app/sign-up)
+
+[Netlify: Чат](https://chat-olgavrish.netlify.app/messenger)
+
+[Netlify: Профиль](https://chat-olgavrish.netlify.app/settings)
+
+Страница 404 -- любой другой роут
+
+## 🔥 Спринт_3: новые фичи
+
+В проект добавлен роутинг, теперь страницы доступны по отдельным ссылкам. Внедрен HTTP API чатов. Регистрация, авторизация, изменение пользователя работают через API. Так же подключен WebSocket, обмен сообщениями происходит в live-режиме.
+
+## Спринт_2: новые фичи
 
 Проект переписан на TypeScript. Внедрен компонентный подход. Добавлено отображение списка чатов, ленты переписки, и блока нового сообщения. Всем формам добавлена валидация. В проект добавлены ESLint и Stylelint.
 
@@ -47,4 +59,3 @@ npm run start
 # Сборка проекта в папку `dist` (оптимизированная версия)
 npm run build
 ```
-

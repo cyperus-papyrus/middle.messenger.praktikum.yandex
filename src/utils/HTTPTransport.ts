@@ -1,8 +1,22 @@
+export const mainURL = `https://ya-praktikum.tech/api/v2`
+
 enum HTTPMethod {
     GET = 'GET',
     POST = 'POST',
     PUT = 'PUT',
     DELETE = 'DELETE'
+}
+
+export enum HttpStatus {
+    Ok = 200,
+    Created = 201,
+    NoContent = 204,
+    BadRequest = 400,
+    Unauthorized = 401,
+    Forbidden = 403,
+    NotFound = 404,
+    Conflict = 409,
+    InternalServerError = 500,
 }
 
 type RequestOptions = {
@@ -17,7 +31,7 @@ export default class HTTPTransport {
     private baseUrl: string;
 
     constructor(baseUrl: string) {
-        this.baseUrl = baseUrl;
+        this.baseUrl = `${mainURL}${baseUrl}`;
     }
 
     private createMethod(method: HTTPMethod): HTTPFunction {
@@ -35,6 +49,7 @@ export default class HTTPTransport {
         const { method, data } = options;
         const fullUrl = `${this.baseUrl}${url}`;
         const isGet = method === HTTPMethod.GET;
+        const isFormData = data instanceof FormData;
 
         return new Promise((resolve, reject) => {
             const xhr = new XMLHttpRequest();
@@ -43,22 +58,55 @@ export default class HTTPTransport {
                 : fullUrl;
 
             xhr.open(method, requestUrl);
-            xhr.setRequestHeader('Content-Type', 'application/json');
-
+            xhr.withCredentials = true;
+            if (!isFormData) {
+                xhr.setRequestHeader('Content-Type', 'application/json');
+            }
             xhr.onload = () => {
-                if (xhr.status >= 200 && xhr.status < 300) {
-                    try {
-                        resolve(xhr.responseText
-                            ? JSON.parse(xhr.responseText) as T
-                            : null as unknown as T);
-                    } catch {
-                        reject(new Error('Invalid JSON response'));
-                    }
-                } else {
-                    reject(new Error(`Request failed with status ${xhr.status}`));
+                switch (xhr.status) {
+                    case HttpStatus.Ok:
+                    case HttpStatus.Created:
+                        if (xhr.responseText === "OK") {
+                            resolve(null as unknown as T);
+                        } else {
+                            try {
+                                resolve(JSON.parse(xhr.responseText) as T);
+                            } catch {
+                                reject(new Error('Invalid JSON response'));
+                            }
+                        }
+                        break;
+                    case HttpStatus.NoContent:
+                        resolve(null as unknown as T);
+                        break;
+
+                    case HttpStatus.BadRequest:
+                        reject(new Error(`Bad Request (${xhr.status})`));
+                        break;
+                    case HttpStatus.Unauthorized:
+                        reject(new Error(`Unauthorized (${xhr.status})`));
+                        break;
+                    case HttpStatus.Forbidden:
+                        reject(new Error(`Forbidden (${xhr.status})`));
+                        break;
+                    case HttpStatus.NotFound:
+                        reject(new Error(`Not Found (${xhr.status})`));
+                        break;
+                    case HttpStatus.Conflict:
+                        reject(new Error(`Conflict (${xhr.status})`));
+                        break;
+                    case HttpStatus.InternalServerError:
+                        reject(new Error(`Internal Server Error (${xhr.status})`));
+                        break;
+
+                    default:
+                        if (xhr.status >= 200 && xhr.status < 300) {
+                            resolve(xhr.responseText as unknown as T);
+                        } else {
+                            reject(new Error(`Unhandled status: ${xhr.status}`));
+                        }
                 }
             };
-
             xhr.onabort = () => reject(new Error('Request aborted'));
             xhr.onerror = () => reject(new Error('Network error'));
             xhr.ontimeout = () => reject(new Error('Request timed out'));
@@ -67,7 +115,11 @@ export default class HTTPTransport {
             if (isGet || !data) {
                 xhr.send();
             } else {
-                xhr.send(JSON.stringify(data));
+                if (isFormData) {
+                    xhr.send(data as FormData);
+                } else {
+                    xhr.send(JSON.stringify(data));
+                }
             }
         });
     }

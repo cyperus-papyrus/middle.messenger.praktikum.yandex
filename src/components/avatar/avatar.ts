@@ -1,7 +1,9 @@
 import Block from '../../framework/Block';
+import { mainURL } from '../../utils/HTTPTransport';
+import { isEmpty } from '../../utils/helpers';
 
 interface IAvatarProps {
-    name?: string;
+    src?: string | null;
     alt?: string;
     className?: string;
     attr?: Record<string, string>;
@@ -9,8 +11,12 @@ interface IAvatarProps {
 
 export default class Avatar extends Block {
     constructor(props: IAvatarProps) {
+        const avatarSrc = !isEmpty(props.src)
+            ? `${mainURL}/resources${props.src}`
+            : '/Avatar.svg';
+
         super({
-            name: props.name || 'Avatar.svg',
+            src: avatarSrc,
             alt: props.alt || 'User avatar',
             attr: {
                 class: `avatar ${props.className || ''}`.trim(),
@@ -20,6 +26,6 @@ export default class Avatar extends Block {
     }
 
     render(): string {
-        return `<img src="/{{name}}" alt="{{ alt }}" class="{{class}}" />`;
+        return `<div class="{{attr.class}}"><img src="{{src}}" alt="{{alt}}" /></div>`;
     }
 }

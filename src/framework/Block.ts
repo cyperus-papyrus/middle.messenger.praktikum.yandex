@@ -1,20 +1,9 @@
 import EventBus, { EventHandler } from "./EventBus";
 import Handlebars from 'handlebars';
+import { Nullable, IBlockProps } from "../utils/types";
+import store, { StoreEvents } from './Store';
 
-type Nullable<T> = T | null;
-
-export type BlockEvent = (e: Event) => void;
-export interface IBlockEvents {
-    [key: string]: BlockEvent;
-}
-
-interface BlockProps {
-    events?: IBlockEvents;
-    attr?: Record<string, string | boolean | number>;
-    [key: string]: unknown;
-}
-
-export default abstract class Block<TProps extends BlockProps = BlockProps> {
+export default abstract class Block<TProps extends IBlockProps = IBlockProps> {
     static EVENTS = {
         INIT: "init",
         FLOW_CDM: "flow:component-did-mount",
@@ -28,6 +17,7 @@ export default abstract class Block<TProps extends BlockProps = BlockProps> {
     protected children: Record<string, Block> = {};
     protected lists: Record<string, Block[]> = {};
     private eventBus: () => EventBus;
+    protected ignoreLists: string[] = [];
 
     constructor(propsAndChildren: TProps = {} as TProps) {
         const eventBus = new EventBus();
@@ -40,6 +30,10 @@ export default abstract class Block<TProps extends BlockProps = BlockProps> {
         this.eventBus = () => eventBus;
         this._registerEvents(eventBus);
         eventBus.emit(Block.EVENTS.INIT);
+
+        store.on(StoreEvents.Updated, () => {
+            this._onStoreUpdate();
+        });
     }
 
     private _addEvents(): void {
@@ -65,6 +59,20 @@ export default abstract class Block<TProps extends BlockProps = BlockProps> {
         eventBus.on(Block.EVENTS.FLOW_RENDER, this._render.bind(this) as EventHandler);
     }
 
+
+    private _onStoreUpdate() {
+        const newState = store.getState();
+        this.onStoreUpdate(newState);
+    }
+
+    protected onStoreUpdate(state: unknown): void {
+        void state;
+    }
+
+
+    componentWillUnmount() {
+        store.off(StoreEvents.Updated, this._onStoreUpdate);
+    }
     protected init(): void {
         this.eventBus().emit(Block.EVENTS.FLOW_RENDER);
     }
@@ -102,14 +110,15 @@ export default abstract class Block<TProps extends BlockProps = BlockProps> {
         return true;
     }
 
+
     private _getChildrenPropsAndProps(propsAndChildren: TProps): {
         children: Record<string, Block>,
         lists: Record<string, Block[]>,
-        props: BlockProps
+        props: IBlockProps
     } {
         const children: Record<string, Block> = {};
         const lists: Record<string, Block[]> = {};
-        const props: BlockProps = {};
+        const props: IBlockProps = {};
 
         Object.entries(propsAndChildren).forEach(([key, value]) => {
             if (value instanceof Block) {
@@ -171,8 +180,16 @@ export default abstract class Block<TProps extends BlockProps = BlockProps> {
         });
 
         Object.entries(this.lists).forEach(([listKey, children]) => {
+            if (this.ignoreLists?.includes(listKey)) {
+                return;
+            }
+
+
             const stub = fragment.content.querySelector(`[data-list-id="${listKey}"]`);
-            if (!stub) return;
+
+            if (!stub) {
+                return;
+            }
 
             const fragmentContainer = document.createDocumentFragment();
             children.forEach(child => {
