@@ -65,6 +65,6 @@ export const getToken = async (chatId: number) => {
         return await ChatAPI.getToken(chatId) as { token: string };
     } catch (error) {
         console.error('Ошибка получения токена:', error);
-        throw error;
+        return false;
     }
 };

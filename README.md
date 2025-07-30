@@ -19,19 +19,15 @@
 
 [Figma](https://www.figma.com/design/nMbTLoEShwtUgU3KotLhJv/Dark-Theme-Chat-Ui?)
 
-[Netlify: Главная (разводящая)](https://chat-olgavrish.netlify.app/)
+[Netlify: Авторизация](https://chat-olgavrish.netlify.app/)
+
+[Netlify: Регистрация](https://chat-olgavrish.netlify.app/sign-up)
 
 [Netlify: Чат](https://chat-olgavrish.netlify.app/messenger)
 
 [Netlify: Профиль](https://chat-olgavrish.netlify.app/settings)
 
-[Netlify: Профиль: изменение данных](https://chat-olgavrish.netlify.app/settings-change)
-
-[Netlify: Профиль: изменение пароля](https://chat-olgavrish.netlify.app/settings-change-pass)
-
-[Netlify: Авторизация](https://chat-olgavrish.netlify.app/auth)
-
-[Netlify: Регистрация](https://chat-olgavrish.netlify.app/sign-up)
+Страница 404 -- любой другой роут
 
 ## 🔥 Спринт_3: новые фичи
 
