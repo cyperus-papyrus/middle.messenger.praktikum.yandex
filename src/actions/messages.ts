@@ -8,6 +8,16 @@ export const setMessages = (chatId: number, messages: MessageForDisplay[]) => {
 export const addMessage = (chatId: number, message: MessageForDisplay) => {
     const state = Store.getState() as AppState;
     const messages = state.messages?.[chatId] || [];
+
+    const currentChatId = state.currentChatId;
+    if (chatId !== currentChatId) {
+        const chats = state.chats?.map(chat =>
+            chat.id === chatId
+                ? { ...chat, unread_count: (chat.unread_count || 0) + 1 }
+                : chat) || [];
+        Store.set('chats', chats);
+    }
+
     Store.set(`messages.${chatId}`, [message, ...messages]);
 };
 

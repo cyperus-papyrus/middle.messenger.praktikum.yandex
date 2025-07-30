@@ -95,8 +95,11 @@ export default class WebSocketService {
             clearInterval(this.pingInterval);
             this.pingInterval = null;
         }
+        this.messageListeners = [];
     }
-
+    removeAllListeners() {
+        this.messageListeners = [];
+    }
     private tryReconnect() {
         if (this.reconnectAttempts < this.maxReconnectAttempts) {
             this.reconnectAttempts++;
