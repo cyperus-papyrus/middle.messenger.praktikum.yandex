@@ -186,10 +186,9 @@ export default class HomePage extends Block<HomePageProps> {
             }
 
             const wsUrl = `wss://ya-praktikum.tech/ws/chats/${userId}/${chatId}/${token}`;
-
             this.socketService = new WebSocketService(wsUrl, {
                 onOpen: () => {
-                    this.loadMessageHistory(0);
+                    setTimeout(() => this.loadMessageHistory(0), 100);
                 },
                 onClose: () => {
                     console.log('WebSocket connection closed');
@@ -208,7 +207,6 @@ export default class HomePage extends Block<HomePageProps> {
     private handleSocketMessage(data: unknown) {
         const state = Store.getState() as AppState;
         const chatId = state.currentChatId;
-
         if (!chatId) return;
 
         if (Array.isArray(data)) {
@@ -313,6 +311,7 @@ export default class HomePage extends Block<HomePageProps> {
     componentWillUnmount() {
         if (this.socketService) {
             this.socketService.close();
+            this.socketService.removeAllListeners();
         }
         Store.off(StoreEvents.Updated, this._onStoreChange);
     }
