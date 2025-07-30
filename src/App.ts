@@ -3,14 +3,25 @@ import Router from './framework/Router';
 import Auth from './pages/auth';
 import Registration from './pages/registration';
 import Profile from './pages/profile';
-import ProfileChange from './pages/profileChange';
-import ProfilePassChange from './pages/profilePassChange';
 import { Page404, Page500 } from './pages/error/index';
 import AuthAPI from './api/auth-api';
 
 import Store from './framework/Store';
+import ProfileChangePage from './pages/profileChange';
+import ProfilePassChangePage from './pages/profilePassChange';
 
 export const router = new Router('#app')
+
+enum Routes {
+    SignIn = '/',
+    SignUp = '/sign-up',
+    Messenger = '/messenger',
+    Settings = '/settings',
+    ChangePass = '/settings-change-pass',
+    ChagneProfile = '/settings-change',
+    Error404 = '/404',
+    Error500 = '/500'
+}
 
 export default class App {
     router: Router;
@@ -38,27 +49,25 @@ export default class App {
         const currentPath = window.location.pathname;
 
         if (user) {
-            if (currentPath === '/' || currentPath === '/auth' || currentPath === '/sign-up') {
+            if (currentPath === '/' || currentPath === '/sign-up') {
                 this.router.go('/messenger');
             }
         } else {
-            if (currentPath !== '/auth' && currentPath !== '/sign-up') {
-                this.router.go('/auth');
+            if (currentPath !== '/' && currentPath !== '/sign-up') {
+                this.router.go('/');
             }
         }
     }
 
     private _registerRoutes(): void {
-        this.router.use('/', Home);
-        this.router.use('/messenger', Home)
-        this.router.use('/sign-up', Registration);
-        this.router.use('/settings', Profile);
-
-        this.router.use('/auth', Auth);
-        this.router.use('/settings-change', ProfileChange);
-        this.router.use('/settings-change-pass', ProfilePassChange);
-        this.router.use('/500', Page500);
-        this.router.use('/404', Page404);
+        this.router.use(Routes.SignIn, Auth);
+        this.router.use(Routes.Messenger, Home)
+        this.router.use(Routes.SignUp, Registration);
+        this.router.use(Routes.Settings, Profile);
+        this.router.use(Routes.ChagneProfile, ProfileChangePage);
+        this.router.use(Routes.ChangePass, ProfilePassChangePage);
+        this.router.use(Routes.Error500, Page500);
+        this.router.use(Routes.Error404, Page404);
 
         this.router.use('*', Page404);
     }

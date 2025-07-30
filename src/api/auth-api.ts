@@ -4,11 +4,10 @@ import BaseAPI from './base-api';
 const authBaseUrl = '/auth';
 
 class AuthAPI extends BaseAPI {
-    private http: HTTPTransport;
+    private readonly http = new HTTPTransport(authBaseUrl);
 
     constructor() {
         super();
-        this.http = new HTTPTransport(authBaseUrl);
     }
 
     signin(data: { login: string; password: string }) {

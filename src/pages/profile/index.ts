@@ -97,7 +97,7 @@ export default class ProfilePage extends Block {
 
     logout() {
         logout().then(() => {
-            Router.getInstance().go('/auth');
+            Router.getInstance().go('/');
         });
     }
 
