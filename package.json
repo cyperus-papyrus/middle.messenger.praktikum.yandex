@@ -15,15 +15,16 @@
     "lint:css": "stylelint \"src/**/*.scss\"",
     "eslint": "eslint \"src/**/*.[jt]s\"",
     "test": "mocha",
-    "prepare": "husky"
+    "prepare": "husky",
+    "lint-staged": "lint-staged"
   },
   "lint-staged": {
-    "*.{js,ts}": "eslint --fix",
-    "*.{css,scss}": "stylelint --fix"
+    "*.{js,ts}": "npm run eslint",
+    "*.{css,scss}": "npm run lint:css"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm test && npx lint-staged"
+      "pre-commit": "npm run lint-staged && npm test"
     }
   },
   "devDependencies": {
