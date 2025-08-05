@@ -18,6 +18,5 @@
     "sourceMap": true,
     "strictNullChecks": true
   },
-  "include": ["src"]
+  "include": ["src/**/*.ts", "src/**/*.spec.ts"]
 }
-

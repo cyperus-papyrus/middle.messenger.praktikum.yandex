@@ -24,5 +24,14 @@ export default [
             "@typescript-eslint/no-unused-vars": "error",
         }
     },
+    {
+        "files": ["**/*.spec.ts"],
+        "rules": {
+            "@typescript-eslint/no-explicit-any": "off",
+            "@typescript-eslint/no-unused-expressions": "off",
+            "@typescript-eslint/dot-notation": "off",
+            "no-console": "off"
+        }
+    }
 ];
 

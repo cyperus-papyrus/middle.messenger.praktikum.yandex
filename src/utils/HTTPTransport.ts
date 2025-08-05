@@ -1,6 +1,6 @@
 export const mainURL = `https://ya-praktikum.tech/api/v2`
 
-enum HTTPMethod {
+export enum HTTPMethod {
     GET = 'GET',
     POST = 'POST',
     PUT = 'PUT',

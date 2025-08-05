@@ -1,11 +1,15 @@
-import { defineConfig } from 'vite'
+import { defineConfig } from 'vite';
 import handlebars from 'vite-plugin-handlebars';
 import checker from 'vite-plugin-checker';
+import { resolve } from 'path';
 
 export default defineConfig({
-    plugins: [handlebars(), checker({
-        typescript: true,
-    })],
+    plugins: [
+        handlebars(),
+        checker({
+            typescript: true,
+        })
+    ],
     publicDir: 'static',
     server: {
         port: 3000
@@ -19,6 +23,10 @@ export default defineConfig({
         `,
             }
         }
+    },
+    build: {
+        rollupOptions: {
+            input: resolve(__dirname, 'index.html')
+        }
     }
-})
-
+});
