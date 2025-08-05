@@ -14,15 +14,16 @@
     "preview": "vite preview",
     "lint:css": "stylelint \"src/**/*.scss\"",
     "eslint": "eslint \"src/**/*.[jt]s\"",
-    "test": "mocha"
+    "test": "mocha",
+    "prepare": "husky"
   },
   "lint-staged": {
-    "*.{css,scss,pcss}": "npm run stylelint",
-    "*.{js,ts}": "npm run lint"
+    "*.{js,ts}": "eslint --fix",
+    "*.{css,scss}": "stylelint --fix"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm test && npm run lint-staged"
+      "pre-commit": "npm test && npx lint-staged"
     }
   },
   "devDependencies": {
